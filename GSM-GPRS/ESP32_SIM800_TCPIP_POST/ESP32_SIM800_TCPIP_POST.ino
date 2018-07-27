@@ -9,7 +9,7 @@ char ip[16];
 char apn[4] = "pwg"; // apn for us mobile
 //char apn[10] = "hologram";
 
-char get[255] = "GET https://www.oddwires.com HTTP/1.0\r\nHost: www.oddwires.com\r\n\r\n"; 
+char get[255] = "GET https://httpbin.org HTTP/1.0\r\nHost: httpbin.org\r\n\r\n"; 
 
 char commandBuffer[128];
 
@@ -76,14 +76,14 @@ void loop(){
                     Serial.println("Opening TCP");
 
                     // Opens a TCP socket
-                    sprintf(commandBuffer, "AT+CIPSTART=\"TCP\",\"%s\",\"%s\"", "www.oddwires.com", "80");
+                    sprintf(commandBuffer, "AT+CIPSTART=\"TCP\",\"%s\",\"%s\"", "api.scriptrapps.io", "80");
                     Serial.println(commandBuffer);
                     if (SIM800.sendCheckReply2(commandBuffer, "CONNECT OK", 30000) == 1)
                     {
                         Serial.println("Connected");
 
                         // Sends some data to the TCP socket
-                        sprintf(commandBuffer,"AT+CIPSEND=%i", strlen(get));
+                        sprintf(commandBuffer,"AT+CIPSEND=%i", strlen(post));
                         Serial.println(commandBuffer);
                         SIM800.println(commandBuffer);
                         SIM800.getBuffer(buffer, sizeof(buffer), 10000); 
