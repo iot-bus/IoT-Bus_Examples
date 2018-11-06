@@ -12,8 +12,6 @@ void setup() {
     CAN_cfg.rx_queue = xQueueCreate(10,sizeof(CAN_frame_t));
     //start CAN Module
     ESP32Can.CANInit();
-//    pinMode(12, OUTPUT);
-//    digitalWrite(12, LOW);
 }
 
 void loop() {
@@ -40,23 +38,4 @@ void loop() {
         printf("\n");
       }
     }
-//    else
-//    {
-//      rx_frame.FIR.B.FF = CAN_frame_std;
-//      rx_frame.MsgID = 1;
-//      rx_frame.FIR.B.DLC = 8;
-//      rx_frame.data.u8[0] = 'h';
-//      rx_frame.data.u8[1] = 'e';
-//      rx_frame.data.u8[2] = 'l';
-//      rx_frame.data.u8[3] = 'l';
-//      rx_frame.data.u8[4] = 'o';
-//      rx_frame.data.u8[5] = 'c';
-//      rx_frame.data.u8[6] = 'a';
-//      rx_frame.data.u8[7] = 'n';
-//
-//      
-//      ESP32Can.CANWriteFrame(&rx_frame);
-//    }
-//    digitalWrite(12, LOW);
-//    delay(1);
 }

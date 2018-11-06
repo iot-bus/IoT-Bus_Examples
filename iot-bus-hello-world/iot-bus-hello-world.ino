@@ -3,8 +3,8 @@
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
   
-const char* ssid = "NETGEAR96";
-const char* password =  "phoebe1984";
+const char* ssid = "........";
+const char* password =  "........";
   
 AsyncWebServer server(80);
   
@@ -15,7 +15,7 @@ void setup(){
   
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
-    Serial.println("Connecting to WiFi..");
+    Serial.println("Connecting to WiFi...");
   }
   
   Serial.println(WiFi.localIP());
