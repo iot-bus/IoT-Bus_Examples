@@ -37,10 +37,10 @@ TFT_eSPI tft = TFT_eSPI();       // Invoke custom library
 //#define DCS  16  /* Chip select pin (T_CS) of touch screen */
 //#define DCLK 18  /* Clock pin (T_CLK) of touch screen */
 
-XPT2046_Touchscreen ts(CS_PIN);  // Param 2 - NULL - No interrupts
+//XPT2046_Touchscreen ts(CS_PIN);  // Param 2 - NULL - No interrupts
 //XPT2046_Touchscreen ts(CS_PIN, 255);  // Param 2 - 255 - No interrupts
 // this was the old one
-//XPT2046_Touchscreen touch(CS_PIN, TIRQ_PIN);  // Param 2 - Touch IRQ Pin - interrupt enabled polling
+XPT2046_Touchscreen touch(CS_PIN, TIRQ_PIN);  // Param 2 - Touch IRQ Pin - interrupt enabled polling
 
 //#include <TFT_Touch.h>
 /* Create an instance of the touch screen library */
@@ -56,7 +56,7 @@ void setup()
 {
   Serial.begin(115200);
 
-  ts.begin();
+  touch.begin();
   pinMode(33, OUTPUT);
   digitalWrite(33, HIGH);
   tft.init();
@@ -65,35 +65,41 @@ void setup()
   //touch.setCal(256, 3632, 274, 3579, 320, 240, 1);
   
   // Set the TFT and touch screen to landscape orientation
-  tft.setRotation(1);
-  ts.setRotation(4);
+  tft.setRotation(0);
+  touch.setRotation(0);
 
   tft.setTextSize(1);
   tft.fillScreen(TFT_BLACK);
   tft.setTextColor(TFT_GREEN);
 
-  //Draw the pallete
-  for (int i = 0; i < 10; i++)
-  {
-    tft.fillRect(i * 32, 0, 32, ColorPaletteHigh, colors[i]);
-  }
-
-  //Draw the clear screen button
-  tft.setCursor(264, 7, 2); // x,y,font
+  //Draw the origin corner
+  tft.setCursor(0, 0, 2); // x,y,font
   tft.setTextColor(TFT_WHITE);
-  tft.print("Clear");
-  tft.drawRect(0, 0, 319, 30, TFT_WHITE);
+  tft.print("O");
 
-  // Plot the current colour in the screen clear box
-  tft.fillRect(300, 9, 12, 12, color);
+  //Draw the max X corner
+  tft.setCursor(230, 0, 2); // x,y,font
+  tft.setTextColor(TFT_WHITE);
+  tft.print("X");
+
+  //Draw the max Y corner
+  tft.setCursor(0, 300, 2); // x,y,font
+  tft.setTextColor(TFT_WHITE);
+  tft.print("Y");
+
+    //Draw the max XY corner
+  tft.setCursor(220, 300, 2); // x,y,font
+  tft.setTextColor(TFT_WHITE);
+  tft.print("XY");
+
 }
 
 
 // calibrate touchscreen  
-#define X_LEFT 256
-#define X_DISTANCE 3632
-#define Y_BOTTOM 274
-#define Y_DISTANCE 3579
+#define X_MIN 210
+#define X_MAX 3815
+#define Y_MIN 260
+#define Y_MAX 3756
 
 /* Main program */
 void loop()
@@ -105,21 +111,21 @@ void loop()
   // Raw and coordinate values are stored within library at this instant
   // for later retrieval by GetRaw and GetCoord functions.
   //if (touch.Pressed()) 
-  if (ts.touched()) 
+  if (touch.touched()) 
   {
     Serial.println("touched");
     // Read the current X and Y axis as co-ordinates at the last touch time
     // The values were captured when Pressed() was called!
-    TS_Point p = ts.getPoint();
+    TS_Point p = touch.getPoint();
 
     // Translate raw touch data to tft pixel (320x240 display)
-    X_Coord = (p.x-X_LEFT)/(X_DISTANCE/320);
-    Y_Coord = 240-((p.y-Y_BOTTOM)/(Y_DISTANCE/240)); // allow for screen to be rotated 180 degrees
+    X_Coord = p.x/(X_MAX-X_MIN)*240;
+    Y_Coord = p.y/(Y_MAX-Y_MIN)*320; 
 //    X_Coord = touch.x;
 //    Y_Coord = touch.y;
 
     // raw data
-    //Serial.print(p.x); Serial.print(","); Serial.println(p.y);
+    Serial.print(p.x); Serial.print(","); Serial.println(p.y);
     // translated pixel
     Serial.print(X_Coord); Serial.print(","); Serial.println(Y_Coord);
     
@@ -147,3 +153,4 @@ void loop()
     }
   }
 }
+
