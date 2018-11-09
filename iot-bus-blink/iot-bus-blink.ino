@@ -24,10 +24,7 @@
 
 // the setup function runs once when you press reset or power the board
 void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
-  pinMode(LEDPin, OUTPUT);
-  Serial.begin(115200);
-  Serial.println("Hello world");
+  // initialize digital pin as an output.
 }
 
 // the loop function runs over and over again forever
